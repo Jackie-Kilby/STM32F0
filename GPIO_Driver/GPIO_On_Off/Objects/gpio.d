@@ -1,0 +1,10 @@
+.\objects\gpio.o: gpio.c
+.\objects\gpio.o: gpio.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include\stm32f030x6.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include\core_cm0.h
+.\objects\gpio.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_version.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_compiler.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_armcc.h
+.\objects\gpio.o: D:\Keil\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include\system_stm32f0xx.h

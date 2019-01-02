@@ -1,5 +1,6 @@
 --cpu Cortex-M0
 ".\objects\main.o"
+".\objects\gpio.o"
 ".\objects\startup_stm32f030x6.o"
 ".\objects\system_stm32f0xx.o"
 --strict --scatter ".\Objects\GpioOnOff.sct"

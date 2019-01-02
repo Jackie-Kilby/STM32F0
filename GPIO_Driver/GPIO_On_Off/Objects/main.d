@@ -1,4 +1,5 @@
 .\objects\main.o: main.c
+.\objects\main.o: gpio.h
 .\objects\main.o: D:\Keil\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h
 .\objects\main.o: D:\Keil\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include\stm32f030x6.h
 .\objects\main.o: D:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include\core_cm0.h
