@@ -19,7 +19,6 @@ int main(void)
 			
 	while(1)
 	{	
-		//get led_signal
 		LED_StateMachine();
 	}
 }
