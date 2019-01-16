@@ -1,18 +1,33 @@
-#include "gpio.h"
+#include <stm32f0xx.h>
+#include <stdint.h>
+#include "led.h"
 
-#define GPIO_LED	(4)
-	
 int main(void)
 {
-	//Init LED GPIO
-	gpio_init('A');
-	gpio_set_dir(GPIOA, GPIO_LED, 0);
+	//RCC Set
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 	
-	//Set GPIO Up
-	gpio_set_up(GPIOA, GPIO_LED);
-	//Set GPIO Down
-	gpio_set_down(GPIOA, GPIO_LED);
-
-	while(1);
+	//Set PA4 Output
+	GPIOA->MODER = (GPIOA->MODER & (~(GPIO_MODER_MODER4_Msk))) | GPIO_MODER_MODER4_0;
+	GPIOA->OTYPER &= ~GPIO_OTYPER_OT_4;
+	GPIOA->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR4_1;
+	GPIOA->ODR |= GPIO_ODR_4;
+	
+	//Set PA5 Input
+	GPIOA->MODER &= ~GPIO_MODER_MODER5;
+	GPIOA->OTYPER &= ~GPIO_OTYPER_OT_5;
+			
+	while(1)
+	{	
+		//get led_signal
+		LED_StateMachine();
+	}
 }
+
+
+
+
+
+
+
 
