@@ -406,6 +406,16 @@
               <FileType>1</FileType>
               <FilePath>.\rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>soft_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\soft_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\sys_timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -430,6 +440,16 @@
               <FileName>rtc.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\rtc.h</FilePath>
+            </File>
+            <File>
+              <FileName>soft_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\soft_timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>sys_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\sys_timer.h</FilePath>
             </File>
           </Files>
         </Group>
