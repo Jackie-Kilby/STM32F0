@@ -1,4 +1,4 @@
-#include <stm32f0xx.h>
+#include "compile.h"
 #include "soft_timer.h"
 
 int main(void)

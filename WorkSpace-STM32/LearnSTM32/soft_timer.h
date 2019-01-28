@@ -1,5 +1,4 @@
-#include <stdbool.h>
-#include <stdint.h>
+#include "compile.h"
 #include "sys_timer.h"
 
 typedef struct
