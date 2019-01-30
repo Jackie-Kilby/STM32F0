@@ -1,4 +1,15 @@
 #include "led.h"
+#include "gpio.h"
+
+void led_init(void)
+{
+	//RCC Set
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+	
+	//Set PA4 Output
+	GPIO_SET_MODE_OUTPUT(A, 4);
+	GPIO_SET_UP(A, 4);
+}
 
 /********************************************************************************
 Func Name	: led_high
@@ -26,7 +37,156 @@ void led_low(char port, int pin)
 {
 	GPIOA->ODR &= ~(1 << pin);
 }
-#define LED_STATEMACHINLE_IMPLEMENT_METHOD	0
+#define LED_STATEMACHINLE_IMPLEMENT_METHOD	2
+#if (LED_STATEMACHINLE_IMPLEMENT_METHOD == 2)
+#define TIMER_ON_SLOW_BLINK		50
+#define TIMER_OFF_SLOW_BLINK	150
+#define TIMER_ON_FAST_BLINK		40
+#define TIMER_OFF_FAST_BLINK	40
+/***************************************************************************************
+Func Name	: LED_StateMachine
+Return 		: void
+Parameters	: void
+Descript	: Led State Machine for RealitySwitch
+Developer	: Jack Kilby
+Update		: 2019-01-29
+
+***************************************************************************************/
+typedef enum
+{
+	LED_IDLE,
+	LED_ON,
+	LED_FAST_BLINK,
+	LED_SLOW_BLINK,
+	LED_DOUBLE_BLINK_0,
+	LED_DOUBLE_BLINK_1,
+	LED_DOUBLE_BLINK_2,
+}led_state_t;
+led_state_t led_state = LED_IDLE;
+
+int flag_motor_run = 0;
+int flag_off_rf = 0;
+int flag_is_on_net = 0;
+int flag_net_workwell = 0;
+int flag_bat_low = 0;
+uint32_t timer_blink = 0;
+uint32_t timer_double_blink = 0;
+
+void LED_StateMachine(void)
+{
+	switch(led_state)
+	{
+		case LED_IDLE:
+			if(flag_motor_run)
+			{
+				led_state = LED_ON;
+			}
+			else
+			{
+				if(timer_blink > 0)
+					timer_blink--;
+				
+				if(timer_double_blink > 0)
+					timer_double_blink--;
+				
+				if(0 == timer_blink)
+				{
+					if(!flag_off_rf)
+					{
+						if(flag_is_on_net)
+						{
+							if(!flag_net_workwell)
+							{
+								timer_blink = TIMER_ON_SLOW_BLINK;
+								led_state = LED_SLOW_BLINK;
+							}
+						}
+						else
+						{
+							timer_blink = TIMER_ON_FAST_BLINK;
+							led_state = LED_FAST_BLINK;
+						}
+					}
+				}
+				if((flag_bat_low == 1)&&(timer_double_blink == 0))
+				{
+					timer_double_blink = 10;
+					led_state = LED_DOUBLE_BLINK_0;
+				}
+			}
+			
+			if(LED_IDLE != led_state)
+			{
+				led_low('A', GPIO_LED);
+			}
+			break;
+					
+		case LED_ON:
+			if(!flag_motor_run)
+			{
+				led_high('A', GPIO_LED);
+				led_state = LED_IDLE;
+			}
+			break;
+		
+		case LED_FAST_BLINK:
+			if(timer_blink > 0)
+				--timer_blink;
+			if(timer_blink == 0)
+			{
+				led_high('A',GPIO_LED);
+				timer_blink = TIMER_OFF_FAST_BLINK;
+				led_state = LED_IDLE;
+			}
+			break;
+			
+		case LED_SLOW_BLINK:
+			if(timer_blink > 0)
+				--timer_blink;
+			if(timer_blink == 0)
+			{
+				timer_blink = TIMER_OFF_SLOW_BLINK;
+				led_high('A',GPIO_LED);
+				led_state = LED_IDLE;
+			}
+			break;
+			
+		case LED_DOUBLE_BLINK_0:
+			if(timer_double_blink > 0)
+				--timer_double_blink;
+			if(timer_double_blink == 0)
+			{
+				timer_double_blink = 10;
+				led_high('A',GPIO_LED);
+				led_state = LED_DOUBLE_BLINK_1;
+			}
+			break;
+			
+		case LED_DOUBLE_BLINK_1:
+			if(timer_double_blink > 0)
+				--timer_double_blink;
+			if(timer_double_blink == 0)
+			{
+				timer_double_blink = 10;
+				led_low('A',GPIO_LED);
+				led_state = LED_DOUBLE_BLINK_2;
+			}
+			break;
+			
+		case LED_DOUBLE_BLINK_2:
+			if(timer_double_blink > 0)
+				--timer_double_blink;
+			if(timer_double_blink == 0)
+			{
+				timer_double_blink = 500;
+				led_high('A',GPIO_LED);
+				led_state = LED_IDLE;
+			}
+			break;
+	}
+}
+#endif
+
 #if (LED_STATEMACHINLE_IMPLEMENT_METHOD == 0)
 /***************************************************************************************
 Func Name	: LED_StateMachine

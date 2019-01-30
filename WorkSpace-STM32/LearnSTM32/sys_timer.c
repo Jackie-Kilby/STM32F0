@@ -29,7 +29,7 @@ void systimer_init(void)
 	TIM14->DIER |= TIM_DIER_UIE;
 	
 	//TIM14 Config
-	TIM14->PSC = 7999U;
+	TIM14->PSC = 7999U;						//Tuned for 10ms sys_timer
 	TIM14->ARR = 50000U;
 	TIM14->CNT = 0;
 	

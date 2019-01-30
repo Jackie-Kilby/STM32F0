@@ -20,6 +20,7 @@ void softtimer_set(softtimer_t *timer, uint32_t interval)
 
 bool softtimer_is_hit(softtimer_t *timer)
 {
+
 	if(timer->state == SOFTTIMER_STATE_STOPPED)
 	{
 		return false;
@@ -30,7 +31,7 @@ bool softtimer_is_hit(softtimer_t *timer)
 	}
 
 	uint32_t current_time = systimer_get_current();
-	
+
 	if(timer->start_time < timer->end_time)
 	{
 		if(timer->end_time < current_time || current_time < timer->start_time)
