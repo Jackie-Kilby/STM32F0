@@ -38,6 +38,26 @@ void led_low(char port, int pin)
 	GPIOA->ODR &= ~(1 << pin);
 }
 #define LED_STATEMACHINLE_IMPLEMENT_METHOD	2
+#if (LED_STATEMACHINLE_IMPLEMENT_METHOD == 5)
+uint32_t timer_blink = 0;
+int flag_motor_run = 0;
+void LED_StateMachine(void)
+{
+	//if(flag_motor_run)
+	{
+	//	GPIOA->ODR &= ~(1 << 4);
+	//	return;
+	}
+	timer_blink++;
+	if(timer_blink > 40)
+	{
+		timer_blink = 0;
+		GPIOA->ODR ^= (1 << 4);
+	}
+}
+
+
+#endif 
 #if (LED_STATEMACHINLE_IMPLEMENT_METHOD == 2)
 #define TIMER_ON_SLOW_BLINK		50
 #define TIMER_OFF_SLOW_BLINK	150

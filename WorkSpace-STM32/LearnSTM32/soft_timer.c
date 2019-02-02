@@ -1,53 +1,53 @@
-#include "compile.h"
 #include "soft_timer.h"
+#include "sys_timer.h"
 
-#define SOFTTIMER_STATE_STOPPED	(0)
-#define SOFTTIMER_STATE_RUNNING	(1)
-#define SOFTTIMER_STATE_REACHED	(2)
+#define SOFT_TIMER_STATE_STOPED							(0)
+#define SOFT_TIMER_STATE_START							(1)
+#define SOFT_TIMER_STATE_REACHED						(2)
 
 
-void softtimer_stop(softtimer_t *timer)
+void soft_timer_stop (soft_timer_t * timer)
 {
-	timer->state = SOFTTIMER_STATE_STOPPED;
+	timer->state = SOFT_TIMER_STATE_STOPED;
 }
 
-void softtimer_set(softtimer_t *timer, uint32_t interval)
+void soft_timer_set_start_point (soft_timer_t * timer)
 {
-	timer->start_time = systimer_get_current();
-	timer->end_time = timer->start_time + interval;
-	timer->state = SOFTTIMER_STATE_RUNNING;
+	timer->start = get_current_time();
 }
 
-bool softtimer_is_hit(softtimer_t *timer)
+void soft_timer_set_timeout (soft_timer_t *timer, uint32_t timeout_ms)
 {
+	timer->stop = timer->start + timeout_ms;
+	timer->state = SOFT_TIMER_STATE_START;
+}
 
-	if(timer->state == SOFTTIMER_STATE_STOPPED)
-	{
-		return false;
-	}
-	if(timer->state == SOFTTIMER_STATE_REACHED)
-	{
-		return false;
-	}
+bool soft_timer_is_timeout (soft_timer_t *timer)
+{
+	if(timer->state == SOFT_TIMER_STATE_STOPED)
+	return false;
 
-	uint32_t current_time = systimer_get_current();
+	if(timer->state == SOFT_TIMER_STATE_REACHED)
+	return true;
 
-	if(timer->start_time < timer->end_time)
+	uint32_t current = get_current_time();
+
+	if(timer->start < timer->stop)
 	{
-		if(timer->end_time < current_time || current_time < timer->start_time)
+		if((current < timer->start) || (current >= timer->stop))
 		{
-			timer->state = SOFTTIMER_STATE_REACHED;
+			timer->state = SOFT_TIMER_STATE_REACHED;
 			return true;
 		}
 	}
 	else
 	{
-		if(timer->end_time < current_time && current_time < timer->start_time)
+		if((current < timer->start) && (current >= timer->stop))
 		{
-			timer->state = SOFTTIMER_STATE_REACHED;
+			timer->state = SOFT_TIMER_STATE_REACHED;
 			return true;
 		}
 	}
+
 	return false;
 }
-

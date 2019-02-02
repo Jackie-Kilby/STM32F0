@@ -2,6 +2,7 @@
 #include "sys_timer.h"
 
 uint32_t systimer_cnt = 0;
+extern uint32_t g_sys_clock;
 
 void TIM14_IRQHandler(void)
 {
@@ -9,7 +10,7 @@ void TIM14_IRQHandler(void)
 	systimer_cnt++;
 }
 
-uint32_t systimer_get_current(void)
+uint32_t get_current_time(void)
 {
 	uint32_t time_current = 0;
 	time_current = systimer_cnt*(TIM14->ARR)+(TIM14->CNT);
@@ -17,7 +18,7 @@ uint32_t systimer_get_current(void)
 }
 
 
-void systimer_init(void)
+void sys_timer_init(void)
 {
 	//TIM14 for System Tick
 	//RCC Set
@@ -29,7 +30,8 @@ void systimer_init(void)
 	TIM14->DIER |= TIM_DIER_UIE;
 	
 	//TIM14 Config
-	TIM14->PSC = 7999U;						//Tuned for 10ms sys_timer
+	uint32_t psc_for_sys_clock = g_sys_clock - 1;
+	TIM14->PSC = psc_for_sys_clock;
 	TIM14->ARR = 50000U;
 	TIM14->CNT = 0;
 	
